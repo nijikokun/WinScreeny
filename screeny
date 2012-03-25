@@ -1,0 +1,69 @@
+#!/bin/bash
+#
+# Windows Screenfetch (Without the Screenshot functionality)
+# Hacked together by Nijikokun <nijikokun@gmail.com> 
+# License: AOL <aol.nexua.org>
+
+f=3 b=4
+for j in f b; do
+  for i in {0..7}; do
+    printf -v $j$i %b "\e[${!j}${i}m"
+  done
+done
+bld=$'\e[1m'
+rst=$'\e[0m'
+inv=$'\e[7m'
+
+user="$USER"
+host=`hostname`
+cpu=`wmic cpu get name`
+os=`wmic os get name | head -2 | tail -1`
+os=`expr match "$os" '\(Microsoft Windows [A-Za-z0-9]\+\)'`
+osarch=`wmic os get OSArchitecture | head -2 | tail -1`
+hddsize=`wmic diskdrive get size | head -2 | tail -1 | tr -d '\r '`
+hddfree=`wmic logicaldisk get freespace | head -2 | tail -1 | tr -d '\r '`
+hddsize="$((hddsize/1024/1024/1024))${f4}G"
+hddfree="$((hddfree/1024/1024/1024))${f4}G"
+height=`wmic desktopmonitor get screenheight | head -2 | tail -1 | tr -d '\r '`
+width=`wmic desktopmonitor get screenwidth | head -2 | tail -1 | tr -d '\r '`
+resolution="$width ${f3}x ${f7}$height"
+cpu=$(awk -F':' '/model name/{ print $2 }' /proc/cpuinfo | head -n 1 | tr -s " " | sed 's/^ //')
+uptime=`awk -F. '{print $1}' /proc/uptime`
+secs=$((${uptime}%60))
+mins=$((${uptime}/60%60))
+hours=$((${uptime}/3600%24))
+days=$((${uptime}/86400))
+uptime="${mins}${f4}m"
+if [ "${hours}" -ne "0" ]; then
+  uptime="${hours}${f4}h ${f7}${uptime}"
+fi
+if [ "${days}" -ne "0" ]; then
+  uptime="${days}${f4}d ${f7}${uptime}"
+fi
+total_mem=$(awk '/MemTotal/ { print $2 }' /proc/meminfo)
+totalmem=$((${total_mem}/1024))
+free_mem=$(awk '/MemFree/ { print $2 }' /proc/meminfo)
+used_mem=$((${total_mem} - ${free_mem}))
+usedmem=$((${used_mem}/1024))
+mem="${usedmem}${f4}MB ${f3}/${f7} ${totalmem}${f4}MB"
+
+cat << EOF
+
+$f1         ,.=:^!^!t3Z3z.,                
+$f1        :tt:::tt333EE3                  ${f1}${user}${f7}@${f3}${host}
+$f1        Et:::ztt33EEE  $f2@Ee.,      ..,   
+$f1       ;tt:::tt333EE7 $f2;EEEEEEttttt33#   ${f1}OS: ${f7}${os}
+$f1      :Et:::zt333EEQ.$f2 SEEEEEttttt33QL   ${f1}CPU: ${f7}${cpu}
+$f1      it::::tt333EEF $f2@EEEEEEttttt33F    ${f1}Architecture: ${f7}${osarch}
+$f1     ;3=*^\`\`\`'*4EEV $f2:EEEEEEttttt33@.    ${f1}Shell: ${f7}${SHELL}
+$f4     ,.=::::it=., $f1\` $f2@EEEEEEtttz33QF     ${f1}Resolution: ${f7}$resolution
+$f4    ;::::::::zt33)   $f2'4EEEtttji3P*      ${f1}HDD: ${f7}$hddsize ${f3}/ ${f7}$hddfree
+$f4   :t::::::::tt33.$f3:Z3z..  $f2\`\` $f3,..g.      ${f1}Ram: ${f7}$mem
+$f4   i::::::::zt33F$f3 AEEEtttt::::ztF       ${f1}Uptime: ${f7}$uptime
+$f4  ;:::::::::t33V $f3;EEEttttt::::t3      
+$f4  E::::::::zt33L $f3@EEEtttt::::z3F      
+$f4 {3=*^\`\`\`'*4E3) $f3;EEEtttt:::::tZ\`      
+$f4             \` $f3:EEEEtttt::::z7       
+$f3                 $f3'VEzjt:;;z>*\`        
+
+EOF
