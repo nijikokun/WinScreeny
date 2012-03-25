@@ -3,6 +3,8 @@ WinScreeny
 WinScreeny is Screenfetch for Windows OS. You know those linux desktop hipster threads that everyone goes 
 around posting their OS information with the ASCII OS logo next to it? That's this. But, for Windows.
 
+![Win Screeny](http://puu.sh/moB3)
+
 ## Usage
 ``` bash
 $ sh ~/screeny
