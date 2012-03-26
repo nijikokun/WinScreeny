@@ -29,6 +29,6 @@ Download `screeny` and place it in your `scripts` or `$home` folder.
 - Cleanup Code, Put into Methods
 
 ## License
-Author: Nijiko Yonskai <http://resume.nexua.org> <nijikokun@gmail.com> <http://twitter.com/nijikokun>
+Author: Nijiko Yonskai <nijikokun@gmail.com> <http://twitter.com/nijikokun>
 
 Licensed under AOL <http://aol.nexua.org>
