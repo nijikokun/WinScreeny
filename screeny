@@ -4,10 +4,10 @@
 # Hacked together by Nijikokun <nijikokun@gmail.com> 
 # License: AOL <aol.nexua.org>
 
-version='0.2'
+version='0.3'
 
 # Displayment
-display=( Host Cpu OS Arch HDD Resolution Uptime Memory )
+display=( Host Cpu OS Shell Arch HDD Resolution Uptime Memory DE WM WMTheme Font )
 
 # Color Loop
 bld=$'\e[1m'
@@ -25,7 +25,7 @@ done
 debug=
 
 Debug () {
-  echo -e "\e[1;31m:: \e[0m$1"
+	echo -e "\e[1;31m:: \e[0m$1"
 }
 
 # Flag Check
@@ -118,6 +118,44 @@ detectMemory () {
 	[[ "$debug" -eq "1" ]] && Debug "Finding Memory.... Found as: '$mem${rst}'"
 }
 
+detectShell () {
+	myshell==$(echo $SHELL | awk -F"/" '{print $NF}')
+	[[ "$debug" -eq "1" ]] && Debug "Finding Shell.... Found as: '$myshell'"
+}
+
+detectDE () {
+	winver=`wmic os get version | grep -o '^[0-9]'`
+	if [ "$winver" == "7" ]; then
+		de='Aero'
+	elif [ "$winver" == "6" ]; then
+		de='Aero'
+	else
+		de='Luna'
+	fi
+	[[ "$debug" -eq "1" ]] && Debug "Finding Desktop Environment.... Found as: '$de'"
+}
+
+detectWM () {
+	wm=`tasklist | grep -o 'bugn' | tr -d '\r \n'`
+	if [ "$wm" == "bugn" ]; then
+		wm="bug.n"
+	else
+		wm="DWM"
+	fi
+	[[ "$debug" -eq "1" ]] && Debug "Finding Window Manager.... Found as: '$wm'"
+}
+
+detectWMTheme () {
+	themeFile="$(reg query 'HKCU\Software\Microsoft\Windows\CurrentVersion\Themes' /v 'CurrentTheme' | grep -o '[A-Z]:\\.*')"
+	theme=$(echo $themeFile | awk -F"\\" '{print $NF}' | grep -o '[0-9A-z. ]*$' | grep -o '^[0-9A-z ]*')
+	[[ "$debug" -eq "1" ]] && Debug "Finding Window Theme.... Found as: '$theme'"
+}
+
+detectFont () {
+	font=$(cat $HOME/.minttyrc | grep '^Font=.*' | grep -o '[0-9A-z ]*$')
+	[[ "$debug" -eq "1" ]] && Debug "Finding Font.... Found as: '$font'"
+}
+
 # Loops :>
 for i in "${display[@]}"; do
 	[[ "${display[*]}" =~ "$i" ]] && detect${i}
@@ -129,16 +167,16 @@ cat << EOF
 $f1         ,.=:^!^!t3Z3z.,                
 $f1        :tt:::tt333EE3                  ${f1}${user}${f7}@${f3}${host}
 $f1        Et:::ztt33EEE  $f2@Ee.,      ..,   
-$f1       ;tt:::tt333EE7 $f2;EEEEEEttttt33#   ${f1}OS: ${f7}${os}
+$f1       ;tt:::tt333EE7 $f2;EEEEEEttttt33#   ${f1}OS: ${f7}${os} ${arch}
 $f1      :Et:::zt333EEQ.$f2 SEEEEEttttt33QL   ${f1}CPU: ${f7}${cpu}
-$f1      it::::tt333EEF $f2@EEEEEEttttt33F    ${f1}Architecture: ${f7}${arch}
-$f1     ;3=*^\`\`\`'*4EEV $f2:EEEEEEttttt33@.    ${f1}Shell: ${f7}${SHELL}
-$f4     ,.=::::it=., $f1\` $f2@EEEEEEtttz33QF     ${f1}Resolution: ${f7}$width x $height
-$f4    ;::::::::zt33)   $f2'4EEEtttji3P*      ${f1}HDD: ${f7}$free / $size
-$f4   :t::::::::tt33.$f3:Z3z..  $f2\`\` $f3,..g.      ${f1}Ram: ${f7}$mem
-$f4   i::::::::zt33F$f3 AEEEtttt::::ztF       ${f1}Uptime: ${f7}$uptime
-$f4  ;:::::::::t33V $f3;EEEttttt::::t3      
-$f4  E::::::::zt33L $f3@EEEtttt::::z3F      
+$f1      it::::tt333EEF $f2@EEEEEEttttt33F    ${f1}HDD: ${f7}$free / $size
+$f1     ;3=*^\`\`\`'*4EEV $f2:EEEEEEttttt33@.    ${f1}Memory: ${f7}${mem}
+$f4     ,.=::::it=., $f1\` $f2@EEEEEEtttz33QF     ${f1}Uptime: ${f7}$uptime
+$f4    ;::::::::zt33)   $f2'4EEEtttji3P*      ${f1}Resolution: ${f7}$width x $height
+$f4   :t::::::::tt33.$f3:Z3z..  $f2\`\` $f3,..g.      ${f1}DE: ${f7}$de
+$f4   i::::::::zt33F$f3 AEEEtttt::::ztF       ${f1}WM: ${f7}$wm
+$f4  ;:::::::::t33V $f3;EEEttttt::::t3        ${f1}WM Theme: ${f7}$theme
+$f4  E::::::::zt33L $f3@EEEtttt::::z3F        ${f1}Font: ${f7}$font
 $f4 {3=*^\`\`\`'*4E3) $f3;EEEtttt:::::tZ\`      
 $f4             \` $f3:EEEEtttt::::z7       
 $f3                 $f3'VEzjt:;;z>*\`        
