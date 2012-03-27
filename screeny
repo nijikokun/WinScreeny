@@ -4,10 +4,10 @@
 # Hacked together by Nijikokun <nijikokun@gmail.com> 
 # License: AOL <aol.nexua.org>
 
-version='0.3'
+version='0.4'
 
 # Displayment
-display=( Host Cpu OS Shell Arch HDD Resolution Uptime Memory DE WM WMTheme Font )
+display=( Host Cpu OS Arch Shell Motherboard HDD Memory Uptime Resolution DE WM WMTheme Font )
 
 # Color Loop
 bld=$'\e[1m'
@@ -52,6 +52,13 @@ while getopts "vVh" flags; do
 		v) debug=1 continue;;
 	esac
 done
+
+# Prevent Unix Output
+unameOutput=`uname`
+if [[ unameOutput == 'Linux' ]]; then
+    echo 'This script is for Windows, silly!'
+    exit 0
+fi
 
 # Begin Detection
 detectHost () {
@@ -123,6 +130,11 @@ detectShell () {
 	[[ "$debug" -eq "1" ]] && Debug "Finding Shell.... Found as: '$myshell'"
 }
 
+detectMotherboard () {
+    board=`wmic baseboard get product | tail -2 | tr -d '\r '`
+    [[ "$debug" -eq "1" ]] && Debug "Finding Motherboard.... Found as: '$board'"
+}
+
 detectDE () {
 	winver=`wmic os get version | grep -o '^[0-9]'`
 	if [ "$winver" == "7" ]; then
@@ -173,12 +185,12 @@ $f1      it::::tt333EEF $f2@EEEEEEttttt33F    ${f1}HDD: ${f7}$free / $size
 $f1     ;3=*^\`\`\`'*4EEV $f2:EEEEEEttttt33@.    ${f1}Memory: ${f7}${mem}
 $f4     ,.=::::it=., $f1\` $f2@EEEEEEtttz33QF     ${f1}Uptime: ${f7}$uptime
 $f4    ;::::::::zt33)   $f2'4EEEtttji3P*      ${f1}Resolution: ${f7}$width x $height
-$f4   :t::::::::tt33.$f3:Z3z..  $f2\`\` $f3,..g.      ${f1}DE: ${f7}$de
-$f4   i::::::::zt33F$f3 AEEEtttt::::ztF       ${f1}WM: ${f7}$wm
-$f4  ;:::::::::t33V $f3;EEEttttt::::t3        ${f1}WM Theme: ${f7}$theme
-$f4  E::::::::zt33L $f3@EEEtttt::::z3F        ${f1}Font: ${f7}$font
-$f4 {3=*^\`\`\`'*4E3) $f3;EEEtttt:::::tZ\`      
-$f4             \` $f3:EEEEtttt::::z7       
+$f4   :t::::::::tt33.$f3:Z3z..  $f2\`\` $f3,..g.      ${f1}Motherboard: ${f7}$board
+$f4   i::::::::zt33F$f3 AEEEtttt::::ztF       ${f1}Shell: ${f7}$myshell
+$f4  ;:::::::::t33V $f3;EEEttttt::::t3        ${f1}DE: ${f7}$de
+$f4  E::::::::zt33L $f3@EEEtttt::::z3F        ${f1}WM: ${f7}$wm
+$f4 {3=*^\`\`\`'*4E3) $f3;EEEtttt:::::tZ\`      ${f1}WM Theme: ${f7}$theme
+$f4             \` $f3:EEEEtttt::::z7        ${f1}Font: ${f7}$font
 $f3                 $f3'VEzjt:;;z>*\`        
 
 EOF
