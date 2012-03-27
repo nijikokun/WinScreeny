@@ -7,7 +7,7 @@
 version='0.2'
 
 # Displayment
-display=( Host Cpu OS Arch HDD Resolution Uptime Memory )
+display=( Host Cpu Mainboard OS Arch HDD Resolution Uptime Memory )
 
 # Color Loop
 bld=$'\e[1m'
@@ -53,6 +53,13 @@ while getopts "vVh" flags; do
 	esac
 done
 
+#OS Check (Prevent Linux heathens from running the script)
+unameOutput=`uname`
+if [[ unameOutput == 'Linux' ]]; then
+    echo 'This script is for Windows, silly!'
+    exit 0
+fi
+
 # Begin Detection
 detectHost () {
 	user=$(echo "$USER")
@@ -69,6 +76,11 @@ detectOS () {
 	os=`wmic os get name | head -2 | tail -1`
 	os=`expr match "$os" '\(Microsoft Windows [A-Za-z0-9]\+\)'`
 	[[ "$debug" -eq "1" ]] && Debug "Finding OS.... Found as: '$os'"
+}
+
+detectMainboard () {
+    mobo=`wmic baseboard get product | tail -2 | tr -d '\r '`
+    [[ "$debug" -eq "1" ]] && Debug "Finding mainboard.... Found as: '$mobo'"
 }
 
 detectArch () {
@@ -132,13 +144,13 @@ $f1        Et:::ztt33EEE  $f2@Ee.,      ..,
 $f1       ;tt:::tt333EE7 $f2;EEEEEEttttt33#   ${f1}OS: ${f7}${os}
 $f1      :Et:::zt333EEQ.$f2 SEEEEEttttt33QL   ${f1}CPU: ${f7}${cpu}
 $f1      it::::tt333EEF $f2@EEEEEEttttt33F    ${f1}Architecture: ${f7}${arch}
-$f1     ;3=*^\`\`\`'*4EEV $f2:EEEEEEttttt33@.    ${f1}Shell: ${f7}${SHELL}
-$f4     ,.=::::it=., $f1\` $f2@EEEEEEtttz33QF     ${f1}Resolution: ${f7}$width x $height
+$f1     ;3=*^\`\`\`'*4EEV $f2:EEEEEEttttt33@.    ${f1}Mainboard: ${f7}$mobo
+$f4     ,.=::::it=., $f1\` $f2@EEEEEEtttz33QF     ${f1}Shell: ${f7}${SHELL}
 $f4    ;::::::::zt33)   $f2'4EEEtttji3P*      ${f1}HDD: ${f7}$free / $size
 $f4   :t::::::::tt33.$f3:Z3z..  $f2\`\` $f3,..g.      ${f1}Ram: ${f7}$mem
-$f4   i::::::::zt33F$f3 AEEEtttt::::ztF       ${f1}Uptime: ${f7}$uptime
-$f4  ;:::::::::t33V $f3;EEEttttt::::t3      
-$f4  E::::::::zt33L $f3@EEEtttt::::z3F      
+$f4   i::::::::zt33F$f3 AEEEtttt::::ztF       ${f1}Resolution: ${f7}$width x $height
+$f4  ;:::::::::t33V $f3;EEEttttt::::t3        ${f1}Uptime: ${f7}$uptime
+$f4  E::::::::zt33L $f3@EEEtttt::::z3F        
 $f4 {3=*^\`\`\`'*4E3) $f3;EEEtttt:::::tZ\`      
 $f4             \` $f3:EEEEtttt::::z7       
 $f3                 $f3'VEzjt:;;z>*\`        
