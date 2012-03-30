@@ -25,7 +25,7 @@ Download `screeny` and place it in your `scripts` or `$home` folder.
 
 ## Todo
 - Optional Settings
-- <s>Screenshots</s>
+- Screenshots
 - <s>Cleanup Code, Put into Methods</s>
 
 ## License
