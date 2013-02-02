@@ -148,9 +148,12 @@ detectDE () {
 }
 
 detectWM () {
-	wm=`tasklist | grep -o 'bugn' | tr -d '\r \n'`
-	if [ "$wm" == "bugn" ]; then
+	bugn=`tasklist | grep -o 'bugn' | tr -d '\r \n'`
+	wind=`tasklist | grep -o 'Windawesome' | tr -d '\r \n'`
+	if [ "$bugn" = "bugn" ]; then
 		wm="bug.n"
+	elif [ "$wind" = "Windawesome" ]; then
+		wm="Windawesome"
 	else
 		wm="DWM"
 	fi
@@ -164,7 +167,7 @@ detectWMTheme () {
 }
 
 detectFont () {
-	font=$(cat $HOME/.minttyrc | grep '^Font=.*' | grep -o '[0-9A-z ]*$')
+	font=$(cat $HOME/.minttyrc | grep '^Font=.*' | grep -o '[0-9a-Z ]*$')
 	[[ "$debug" -eq "1" ]] && Debug "Finding Font.... Found as: '$font'"
 }
 
