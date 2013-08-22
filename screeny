@@ -55,7 +55,7 @@ done
 
 # Prevent Unix Output
 unameOutput=`uname`
-if [[ unameOutput == 'Linux' ]]; then
+if [[ "$unameOutput" == 'Linux' ]] || [[ "$unameOutput" == 'Darwin' ]] ; then
     echo 'This script is for Windows, silly!'
     exit 0
 fi
