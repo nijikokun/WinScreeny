@@ -194,6 +194,6 @@ $f4  ;:::::::::t33V $f3;EEEttttt::::t3        ${f1}DE: ${f7}$de
 $f4  E::::::::zt33L $f3@EEEtttt::::z3F        ${f1}WM: ${f7}$wm
 $f4 {3=*^\`\`\`'*4E3) $f3;EEEtttt:::::tZ\`        ${f1}WM Theme: ${f7}$theme
 $f4             \` $f3:EEEEtttt::::z7          ${f1}Font: ${f7}$font
-$f3                 $f3'VEzjt:;;z>*\`        
+$f3                 $f3'VEzjt:;;z>*\`        $rst
 
 EOF
