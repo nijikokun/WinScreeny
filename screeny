@@ -167,7 +167,7 @@ detectWMTheme () {
 }
 
 detectFont () {
-	font=$(cat $HOME/.minttyrc | grep '^Font=.*' | grep -o '[0-9a-Z ]*$')
+	font=$(cat $HOME/.minttyrc | grep '^Font=.*' | grep -o '[0-9A-Za-z ]*$')
 	[[ "$debug" -eq "1" ]] && Debug "Finding Font.... Found as: '$font'"
 }
 
