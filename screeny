@@ -84,8 +84,8 @@ detectArch () {
 }
 
 detectHDD () {
-	size=`df -H | grep -vE '^[A-Z]\:\/|File' | awk '{ print $2 }' | head -1 | tr -d '\r '`
-	free=`df -H | grep -vE '^[A-Z]\:\/|File' | awk '{ print $4 }' | head -1 | tr -d '\r '`
+	size=`df -H | grep -E '^[A-Z]\:\/?|File' | awk '{ print $2 }' | head -1 | tr -d '\r '`
+	free=`df -H |  grep -E '^[A-Z]\:\/?|File' | awk '{ print $4 }' | head -1 | tr -d '\r '`
 	[[ "$debug" -eq "1" ]] && Debug "Finding HDD Size, and Free Space.... Found as: '$free / $size'"
 }
 
@@ -169,6 +169,9 @@ detectWMTheme () {
 detectFont () {
 	font=$(cat $HOME/.minttyrc | grep '^Font=.*' | grep -o '[0-9A-Za-z ]*$')
 	[[ "$debug" -eq "1" ]] && Debug "Finding Font.... Found as: '$font'"
+#	if [ -z $font ]; then
+#		font="Lucida Console"
+#	fi
 }
 
 # Loops :>
