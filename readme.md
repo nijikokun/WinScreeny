@@ -1,6 +1,6 @@
 WinScreeny
 ======
-WinScreeny is Screenfetch for Windows OS. You know those linux desktop hipster threads that everyone goes 
+WinScreeny is Screenfetch for Windows OS. You know those linux desktop hipster threads where everyone goes 
 around posting their OS information with the ASCII OS logo next to it? That's this. But, for Windows.
 
 ![Win Screeny](http://puu.sh/mFD2)
@@ -17,7 +17,7 @@ $ screeny
 ```
 
 ## Install
-Download `screeny` and place it in your `scripts` or `$home` folder.
+Download `WinScreeny` and place it in your `scripts` or `$home` folder.
 
 ## Requirements
 - CygWin
